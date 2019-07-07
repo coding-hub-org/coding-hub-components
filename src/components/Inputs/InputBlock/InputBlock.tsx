@@ -5,6 +5,11 @@ import React, {
 	ChangeEvent
 } from 'react';
 
+export interface ValidationMessageType {
+	message: string;
+	regex: RegExp;
+}
+
 export type InputBlockType = {
 	label?: string;
 	id?: string;
@@ -14,8 +19,7 @@ export type InputBlockType = {
 	disabled?: boolean;
 	maxLength?: number;
 	onChange?: Function;
-	regex?: RegExp;
-	validationMessage?: string;
+	validationMessage?: ValidationMessageType;
 };
 
 const InputBlock: FunctionComponent<InputBlockType> = props => {
@@ -28,24 +32,19 @@ const InputBlock: FunctionComponent<InputBlockType> = props => {
 		disabled,
 		onChange,
 		maxLength,
-		regex,
 		validationMessage
 	} = props;
 
 	const [attr, setAttr] = useState({
 		value: '',
-		hasChanged: false,
-		displayMsg: false
+		hasChanged: false
 	});
 
-	useEffect(() => {
-		if (regex) {
-			setAttr({
-				...attr,
-				displayMsg: attr.value.match(regex) ? false : true
-			});
-		}
-	});
+	const displayMsg = validationMessage
+		? attr.value.match(validationMessage.regex)
+			? false
+			: true
+		: true;
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setAttr({ ...attr, value: e.target.value, hasChanged: true });
@@ -66,7 +65,11 @@ const InputBlock: FunctionComponent<InputBlockType> = props => {
 				className="ui-input-block-field"
 			/>
 			<div className="ui-input-block-vmessage">
-				{attr.displayMsg && attr.hasChanged ? validationMessage : ''}
+				{displayMsg && attr.hasChanged
+					? validationMessage
+						? validationMessage.message
+						: ''
+					: ''}
 			</div>
 		</div>
 	);
