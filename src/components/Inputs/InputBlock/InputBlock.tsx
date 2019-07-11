@@ -1,9 +1,4 @@
-import React, {
-	FunctionComponent,
-	useState,
-	useEffect,
-	ChangeEvent
-} from 'react';
+import React, { FunctionComponent, useState, ChangeEvent } from 'react';
 
 export interface ValidationMessageType {
 	message: string;
