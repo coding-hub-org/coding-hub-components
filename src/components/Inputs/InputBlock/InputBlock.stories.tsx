@@ -16,7 +16,7 @@ const inputBlockContainer = {
 
 const vMsg: ValidationMessageType = {
 	message: 'Please enter a valid email',
-	regex: /.+\@.+\..+/
+	regex: /.+@.+\..+/
 };
 
 storiesOf('InputBlock', module)

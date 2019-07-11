@@ -1,4 +1,9 @@
-import React, { FunctionComponent, useState, ChangeEvent } from 'react';
+import React, {
+	FunctionComponent,
+	useState,
+	ChangeEvent,
+	FocusEvent
+} from 'react';
 
 export interface ValidationMessageType {
 	message: string;
@@ -17,22 +22,21 @@ export type InputBlockType = {
 	validationMessage?: ValidationMessageType;
 };
 
-const InputBlock: FunctionComponent<InputBlockType> = props => {
-	const {
-		label,
-		id,
-		type,
-		className,
-		placeholder,
-		disabled,
-		onChange,
-		maxLength,
-		validationMessage
-	} = props;
-
+const InputBlock: FunctionComponent<InputBlockType> = ({
+	label,
+	id,
+	type,
+	className,
+	placeholder,
+	disabled,
+	onChange,
+	maxLength,
+	validationMessage
+}) => {
 	const [attr, setAttr] = useState({
 		value: '',
-		hasChanged: false
+		hasChanged: false,
+		wasBlurred: false
 	});
 
 	const displayMsg = validationMessage
@@ -46,6 +50,11 @@ const InputBlock: FunctionComponent<InputBlockType> = props => {
 		if (onChange) onChange(e.target.value);
 	};
 
+	const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
+		e.preventDefault();
+		setAttr({ ...attr, wasBlurred: true });
+	};
+
 	return (
 		<div className={`ui-input-block-wrapper ${className}`}>
 			<label htmlFor={id} className="ui-input-block-label">
@@ -57,10 +66,11 @@ const InputBlock: FunctionComponent<InputBlockType> = props => {
 				onChange={e => handleChange(e)}
 				placeholder={placeholder}
 				disabled={disabled ? disabled : false}
+				onBlur={e => handleBlur(e)}
 				className="ui-input-block-field"
 			/>
 			<div className="ui-input-block-vmessage">
-				{displayMsg && attr.hasChanged
+				{displayMsg && attr.hasChanged && attr.wasBlurred
 					? validationMessage
 						? validationMessage.message
 						: ''
