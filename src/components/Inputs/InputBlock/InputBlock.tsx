@@ -5,10 +5,10 @@ import React, {
 	FocusEvent
 } from 'react';
 
-export interface ValidationMessageType {
+export type ValidationMessageType = {
 	message: string;
 	regex: RegExp;
-}
+};
 
 export type InputBlockType = {
 	label?: string;
